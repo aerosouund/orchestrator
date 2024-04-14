@@ -72,7 +72,7 @@ func main() {
 
 func createContainer() (*task.Docker, *task.DockerResult) {
 	c := task.Config{
-		Name:  "test",
+		Name:  "new-test",
 		Image: "redis:latest",
 	}
 
