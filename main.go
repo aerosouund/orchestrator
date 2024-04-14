@@ -73,7 +73,7 @@ func main() {
 func createContainer() (*task.Docker, *task.DockerResult) {
 	c := task.Config{
 		Name:  "test",
-		Image: "nginx:latest",
+		Image: "redis:latest",
 	}
 
 	dc, _ := client.NewClientWithOpts(client.FromEnv)
