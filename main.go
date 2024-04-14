@@ -86,6 +86,7 @@ func createContainer() (*task.Docker, *task.DockerResult) {
 		fmt.Printf("%v\n", result.Error)
 		return nil, nil
 	}
+	d.ContainerId = result.ContainerId
 	fmt.Printf("Container %s is running with config %v\n", result.ContainerId, c)
 	return &d, &result
 }
