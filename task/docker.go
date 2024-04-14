@@ -76,10 +76,7 @@ func (d *Docker) Run() DockerResult {
 		log.Printf("Error starting container %s: %v\n", resp.ID, err)
 		return DockerResult{Error: err}
 	}
-	if err != nil {
-		log.Printf("Error starting container %s: %v\n", resp.ID, err.Error())
-		return DockerResult{Error: err}
-	}
+
 	d.Config.ContainerID = resp.ID
 	out, err := d.Client.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true, ShowStderr: true})
 	if err != nil {
