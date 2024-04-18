@@ -42,8 +42,10 @@ func (w *Worker) RunTask() task.DockerResult {
 	if task.ValidStateTransition(taskPersisted.State, taskQueued.State) {
 		switch taskQueued.State {
 		case task.Scheduled:
+			fmt.Println("scheduled: ", taskQueued)
 			result = w.StartTask(taskQueued)
 		case task.Completed:
+			fmt.Println("completed: ", taskQueued)
 			result = w.StopTask(taskQueued)
 		default:
 			result.Error = errors.New("We should not get here")
