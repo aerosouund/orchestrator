@@ -30,7 +30,6 @@ type Config struct {
 	Disk          int64
 	Env           []string
 	RestartPolicy string
-	ContainerID   string
 }
 
 type DockerResult struct {
@@ -38,6 +37,24 @@ type DockerResult struct {
 	Action      string
 	ContainerId string
 	Result      string
+}
+
+func NewDocker(c Config) *Docker {
+	client, _ := client.NewClientWithOpts(client.FromEnv)
+	return &Docker{
+		Client: client,
+		Config: c,
+	}
+}
+
+func NewConfig(t *Task) Config {
+	return Config{
+		Name:          t.Name,
+		Image:         t.Image,
+		Memory:        int64(t.Memory),
+		Disk:          int64(t.Disk),
+		RestartPolicy: t.RestartPolicy,
+	}
 }
 
 func (d *Docker) Run() DockerResult {
@@ -77,7 +94,7 @@ func (d *Docker) Run() DockerResult {
 		return DockerResult{Error: err}
 	}
 
-	d.Config.ContainerID = resp.ID
+	d.ContainerId = resp.ID
 	out, err := d.Client.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true, ShowStderr: true})
 	if err != nil {
 		log.Printf("Error getting logs for container %s: %v\n", resp.ID, err)
@@ -103,6 +120,6 @@ func (d *Docker) Stop(id string) DockerResult {
 	if err != nil {
 		panic(err)
 	}
-	return DockerResult{Action: "stop", Result: "success"}
+	return DockerResult{ContainerId: id, Action: "stop", Result: "success"}
 
 }
