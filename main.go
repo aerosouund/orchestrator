@@ -18,7 +18,7 @@ func main() {
 	}
 	t := task.Task{
 		ID:    uuid.New(),
-		Name:  "test-container-1",
+		Name:  "test-container-2",
 		State: task.Scheduled,
 		Image: "strm/helloworld-http",
 	}
