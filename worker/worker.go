@@ -82,7 +82,7 @@ func (w *Worker) StartTask(t task.Task) task.DockerResult {
 func (w *Worker) StopTask(t task.Task) task.DockerResult {
 	config := task.NewConfig(&t)
 	d := task.NewDocker(config)
-	result := d.Stop(d.ContainerId)
+	result := d.Stop(t.ContainerId)
 	if result.Error != nil {
 		log.Printf("error stopping container %s: %s", d.ContainerId, result.Error)
 	}
