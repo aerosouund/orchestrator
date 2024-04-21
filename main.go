@@ -31,7 +31,7 @@ func main() {
 	}
 	t.ContainerId = result.ContainerId
 
-	time.Sleep(time.Second * 30)
+	time.Sleep(time.Second * 10)
 	fmt.Printf("stopping task %s\n", t.ID)
 	t.State = task.Completed
 	w.AddTask(t)
