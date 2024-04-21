@@ -39,9 +39,6 @@ func (w *Worker) RunTask() task.DockerResult {
 
 	}
 	var result task.DockerResult
-	defer func() {
-		log.Println("returning result: ", result)
-	}()
 	if task.ValidStateTransition(taskPersisted.State, taskQueued.State) {
 		switch taskQueued.State {
 		case task.Scheduled:
