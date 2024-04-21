@@ -24,6 +24,14 @@ func (w *Worker) AddTask(t task.Task) {
 
 func (w *Worker) CollectStats() {}
 
+func (w *Worker) GetTasks() []*task.Task {
+	tasks := []*task.Task{}
+	for _, t := range w.Db {
+		tasks = append(tasks, t)
+	}
+	return tasks
+}
+
 func (w *Worker) RunTask() task.DockerResult {
 	t := w.Queue.Dequeue()
 	if t == nil {

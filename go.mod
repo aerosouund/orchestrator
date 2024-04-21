@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/docker/docker v26.0.1+incompatible
 	github.com/docker/go-connections v0.5.0
+	github.com/go-chi/chi v1.5.5
 	github.com/golang-collections/collections v0.0.0-20130729185459-604e922904d3
 	github.com/google/uuid v1.6.0
 )
