@@ -63,19 +63,3 @@ func (a *Api) StopTaskHandler(w http.ResponseWriter, r *http.Request) {
 	a.Worker.AddTask(taskCopy)
 	w.WriteHeader(204)
 }
-
-func (a *Api) initRouter() {
-	a.Router = chi.NewRouter()
-	a.Router.Route("/tasks", func(r chi.Router) {
-		r.Post("/", a.StartTaskHandler)
-		r.Get("/", a.GetTasksHandler)
-		r.Route("/{taskID}", func(r chi.Router) {
-			r.Delete("/", a.StopTaskHandler)
-		})
-	})
-}
-
-func (a *Api) Start() {
-	a.initRouter()
-	http.ListenAndServe(fmt.Sprintf("%s:%d", a.Address, a.Port), a.Router)
-}
