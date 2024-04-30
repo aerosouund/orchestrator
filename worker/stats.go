@@ -1,12 +1,71 @@
 package worker
 
-import "github.com/c9s/goprocinfo/linux"
+import (
+	"log"
+
+	"github.com/c9s/goprocinfo/linux"
+)
 
 type Stats struct {
 	MemStats  *linux.MemInfo
 	DiskStats *linux.Disk
 	CpuStats  *linux.CPUStat
 	LoadStats *linux.LoadAvg
+}
+
+func GetStats() *Stats {
+	return &Stats{
+		MemStats:  GetMemoryInfo(),
+		DiskStats: GetDiskInfo(),
+		CpuStats:  GetCpuStats(),
+		LoadStats: GetLoadAvg(),
+	}
+}
+
+func (s *Stats) CpuUsage() float64 {
+	idle := s.CpuStats.Idle + s.CpuStats.IOWait
+	nonIdle := s.CpuStats.User + s.CpuStats.Nice + s.CpuStats.System
+	total := idle + nonIdle
+	if total == 0 {
+		return 0.0
+	}
+	return (float64(total) - float64(idle)) / float64(total)
+}
+
+func GetMemoryInfo() *linux.MemInfo {
+	memstats, err := linux.ReadMemInfo("/proc/meminfo")
+	if err != nil {
+		log.Printf("Error reading from /proc/meminfo")
+		return &linux.MemInfo{}
+	}
+	return memstats
+}
+
+func GetDiskInfo() *linux.Disk {
+	diskstats, err := linux.ReadDisk("/")
+	if err != nil {
+		log.Printf("Error reading from /")
+		return &linux.Disk{}
+	}
+	return diskstats
+}
+
+func GetCpuStats() *linux.CPUStat {
+	stats, err := linux.ReadStat("/proc/stat")
+	if err != nil {
+		log.Printf("Error reading from /proc/stat")
+		return &linux.CPUStat{}
+	}
+	return &stats.CPUStatAll
+}
+
+func GetLoadAvg() *linux.LoadAvg {
+	loadavg, err := linux.ReadLoadAvg("/proc/loadavg")
+	if err != nil {
+		log.Printf("Error reading from /proc/loadavg")
+		return &linux.LoadAvg{}
+	}
+	return loadavg
 }
 
 func (s *Stats) MemTotalKb() uint64 {
